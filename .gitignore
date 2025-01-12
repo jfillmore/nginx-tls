@@ -1,0 +1,7 @@
+/openssl-crt.config
+/openssl-crt.*.config
+!/openssl-crt.example.config
+
+/openssl-ca-crt.config
+/openssl-ca-crt.*.config
+!/openssl-ca-crt.example.config
