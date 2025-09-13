@@ -69,7 +69,7 @@ gen_ssl_ca() {
     [ -f "$dest/$CA_NAME.key" -a $FORCE -eq 0 ] \
         || cmd openssl genrsa \
             -out "$dest/$CA_NAME.key" \
-            2048 \
+            4096 \
             || fail "failed to generate CA RSA key"
     [ -f "$dest/$CA_NAME.crt" ] && {
         cmd openssl x509 \
@@ -84,7 +84,7 @@ gen_ssl_ca() {
             -new \
             -sha256 \
             -nodes \
-            -days $((365 * 2)) \
+            -days $((365 * 1)) \
             -key "$dest/$CA_NAME.key" \
             -out "$dest/$CA_NAME.crt" \
             -config "$BASE_DIR/openssl-ca-crt.config" \
@@ -99,7 +99,7 @@ gen_ssl() {
         rem "creating $dest/$CERT_NAME.key (and CSR)"
         cmd openssl req \
             -nodes \
-            -newkey rsa:2048 \
+            -newkey rsa:4096 \
             -keyout "$dest/$CERT_NAME.key" \
             -out "$dest/$CERT_NAME.csr" \
             -config "$BASE_DIR/openssl-crt.config" \
@@ -122,7 +122,7 @@ gen_ssl() {
             -CA "$dest/$CA_NAME.crt" \
             -CAkey "$dest/$CA_NAME.key" \
             -CAcreateserial \
-            -days $((365 * 2)) \
+            -days $((365 * 1)) \
             -sha256 \
             -out "$dest/$CERT_NAME.crt" \
             || fail "Failed to generate $dest/$CERT_NAME.crt"
@@ -220,7 +220,7 @@ gen_ssl "$output_dir" || fail
 }
 
 echo "- Consider adding trust for '$output_dir/$CA_NAME.crt' (see README.md)"
-echo "e.g. 'sudo security add-trusted-cert '$output_dir/$CA_NAME.crt'"
+echo "e.g. sudo security add-trusted-cert '$output_dir/$CA_NAME.crt'"
 
 [ $tls_only -eq 0 ] && echo "- Be sure to run 'sudo nginx -s reload'"
 
